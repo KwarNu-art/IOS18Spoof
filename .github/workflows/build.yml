@@ -1,0 +1,24 @@
+name: Build IOS18Spoof dylib
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Compile IOS18Spoof.dylib
+        run: |
+          clang -dynamiclib -arch arm64 \
+            -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
+            -miphoneos-version-min=12.0 \
+            -framework Foundation -framework UIKit \
+            -O3 \
+            IOS18Spoof.m -o IOS18Spoof.dylib
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IOS18Spoof-dylib
+          path: IOS18Spoof.dylib
