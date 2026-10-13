@@ -1,32 +1,26 @@
-name: Build iOS Dylib  
- 
-on:  
- push:  
-   branches: [ "main" ]  
- workflow_dispatch:  
- 
-jobs:  
- build:  
-   runs-on: macos-14  
- 
-   steps:  
-     - name: Checkout Code  
-       uses: actions/checkout@v4  
- 
-     - name: Compile Dylib  
-       run: |  
-         xcrun -sdk iphoneos clang -dynamiclib -arch arm64 \  
-           -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \  
-           -miphoneos-version-min=14.0 \  
-           -framework Foundation -framework UIKit -lobjc \  
-           IOS18Spoof.m -o IOS18Spoof.dylib  
- 
-     - name: Sign Binary  
-       run: |  
-         codesign -s - IOS18Spoof.dylib  
- 
-     - name: Upload Artifact  
-       uses: actions/upload-artifact@v4  
-       with:  
-         name: IOS18Spoof.dylib  
-         path: IOS18Spoof.dylib  
+name: Build iOS Dylib
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Compile Dylib
+        run: |
+          xcrun -sdk iphoneos clang -dynamiclib -arch arm64 \
+            -isysroot $(xcrun --sdk iphoneos --show-sdk-path) \
+            -miphoneos-version-min=14.0 \
+            -framework Foundation -framework UIKit -lobjc \
+            IOS18Spoof.m -o IOS18Spoof.dylib
+      - name: Sign Binary
+        run: |
+          codesign -s - IOS18Spoof.dylib
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IOS18Spoof-dylib
+          path: IOS18Spoof.dylib
